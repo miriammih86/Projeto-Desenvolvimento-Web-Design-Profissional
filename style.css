@@ -39,13 +39,13 @@
 body {
   margin: 0;
   min-height: 100vh;
-  display: flex;
+  display:grid;
   flex-direction: column;
   background: var(--cor-papel);
   color: var(--cor-tinta);
   font-family: var(--fonte-texto);
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 h1,
@@ -85,7 +85,7 @@ main {
 }
 
 .topo__conteudo {
-  display: flex;
+  display:flexbox;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
