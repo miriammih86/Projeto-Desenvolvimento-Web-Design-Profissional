@@ -126,13 +126,29 @@
           <div class="campo">
             <label for="hobbies">Seus hobbies</label>
 
-            <textarea
+
+            <input
+              type="text"
+              inputmode="text"
+              minlength="2"
+              maxlength="60"
+              pattern="[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ .'-]{1,59}"
+              title="Digite um nome entre 2 e 60 caracteres."
+              id="hobbies"
+              name="hobbies"
+              placeholder="Ex.: jogar videogame, desenhar, ler"
+              autocomplete="hobbies"
+              required
+            >
+
+           <!-- <textarea
+            type="text"
               id="hobbies"
               name="hobbies"
               rows="4"
               placeholder="Ex.: jogar videogame, desenhar, ler"
               required
-            ></textarea>
+            ></textarea>-->
 
             <p class="dica">
               Separe cada hobby com vírgula.

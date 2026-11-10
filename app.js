@@ -1,3 +1,4 @@
+
 /**
  * Career Dreamer — formulário, validação e integração com a API.
  */
@@ -86,6 +87,7 @@ function validarCampo(campo, tipo) {
     campo.focus();
     return false;
   }
+
   return true;
 }
 
@@ -97,14 +99,36 @@ function etapaValida() {
   return validarCampo(campo, tipo);
 }
 
+// AVANÇAR PELO BOTÃO PRÓXIMO
 document.querySelectorAll("[data-proximo]").forEach((botao) => {
   botao.addEventListener("click", () => {
-    if (etapaValida()) mostrarEtapa(etapaAtual + 1);
+    if (etapaValida()) {
+      mostrarEtapa(etapaAtual + 1);
+    }
   });
 });
 
+// VOLTAR PELO BOTÃO
 document.querySelectorAll("[data-voltar]").forEach((botao) => {
-  botao.addEventListener("click", () => mostrarEtapa(etapaAtual - 1));
+  botao.addEventListener("click", () => {
+    mostrarEtapa(etapaAtual - 1);
+  });
+});
+
+// NOVA FUNÇÃO: AVANÇAR COM ENTER
+document.querySelectorAll(".etapa input, .etapa textarea").forEach((campo) => {
+  campo.addEventListener("keydown", (evento) => {
+    if (evento.key === "Enter") {
+      evento.preventDefault();
+
+      const etapa = campo.closest(".etapa");
+      const botaoProximo = etapa.querySelector("[data-proximo]");
+
+      if (botaoProximo && etapaValida()) {
+        botaoProximo.click();
+      }
+    }
+  });
 });
 
 function respostaValida(dados) {
@@ -135,6 +159,7 @@ formulario.addEventListener("submit", async (evento) => {
     validarCampo(campoHobbies, "lista");
     return;
   }
+
   if (interesses.length === 0) {
     validarCampo(campoInteresses, "lista");
     return;
@@ -157,7 +182,10 @@ formulario.addEventListener("submit", async (evento) => {
   try {
     const resposta = await fetch(CONFIG.API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
       body: JSON.stringify(perfil),
       signal: controlador.signal
     });
@@ -174,12 +202,16 @@ formulario.addEventListener("submit", async (evento) => {
 
     sessionStorage.setItem(CONFIG.CHAVE_RESULTADO, JSON.stringify(dados));
     window.location.href = "resultado.html";
+
   } catch (erro) {
     console.error("Erro ao enviar perfil:", erro);
+
     const texto = erro.name === "AbortError"
       ? "A análise demorou mais que o esperado. Seus dados continuam preenchidos; tente novamente."
       : "Não foi possível analisar seu perfil agora. Verifique sua conexão e tente novamente.";
+
     abrirModal(texto);
+
   } finally {
     clearTimeout(tempoLimite);
     enviando = false;
