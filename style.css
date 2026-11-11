@@ -1,3 +1,33 @@
+/*teste particulas*/
+/* Fundo das partículas */
+.container_fundo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Área das partículas */
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+/* Conteúdo na frente das partículas */
+.topo,
+.pagina-inicial,
+.rodape {
+    position: relative;
+    z-index: 1;
+}
+/*fim teste*/
+
 /* =====================================================
    CAREER DREAMER — visual claro e moderno (tons de azul)
    ===================================================== */
@@ -451,4 +481,339 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
   .carreira:hover { transform: none; }
+}
+
+/* =====================================================
+   CAREER DREAMER — TEMA DARK (VERMELHO, PRETO E CINZA)
+   Paleta: vermelho #e00000 | preto #000000 | branco
+           cinza #595050 | vinho #850f0f
+   ===================================================== */
+
+:root {
+  --azul-900: #ffffff;
+  --azul-700: #e00000;
+  --azul-600: #c90000;
+  --azul-500: #e00000;
+  --ceu-400: #ff2525;
+  --ceu-300: #ff7777;
+  --azul-200: #493b3b;
+  --azul-100: #211b1b;
+  --azul-50: #151212;
+
+  --tinta: #f7f3f3;
+  --tinta-suave: #c0b6b6;
+  --borda: #493b3b;
+  --erro: #ff5555;
+
+  --sombra-p: 0 2px 10px rgb(0 0 0 / .38), 0 0 12px rgb(224 0 0 / .08);
+  --sombra-g: 0 12px 34px rgb(0 0 0 / .55), 0 0 22px rgb(133 15 15 / .13);
+}
+
+/* Fundo geral */
+body {
+  background:
+    radial-gradient(46rem 28rem at 90% -8%, rgb(133 15 15 / .22), transparent 65%),
+    radial-gradient(36rem 22rem at -8% 18%, rgb(224 0 0 / .10), transparent 62%),
+    #080707;
+  color: var(--tinta);
+}
+
+/* Cabeçalho */
+.topo {
+  background: rgb(8 7 7 / .88);
+  border-bottom: 1px solid #493b3b;
+  box-shadow: 0 6px 24px rgb(0 0 0 / .35);
+}
+.marca { color: #ffffff; }
+.marca__simbolo {
+  background: linear-gradient(135deg, #e00000, #850f0f);
+  color: #ffffff;
+  box-shadow: 0 5px 18px rgb(224 0 0 / .28);
+}
+
+/* Painel de apresentação */
+.apresentacao {
+  background:
+    radial-gradient(28rem 16rem at 100% 0%, rgb(224 0 0 / .18), transparent 66%),
+    linear-gradient(155deg, #211b1b, #100d0d 72%);
+  border: 1px solid #493b3b;
+  box-shadow: var(--sombra-g);
+}
+.apresentacao::after {
+  background-image: radial-gradient(rgb(224 0 0 / .20) 1.3px, transparent 1.3px);
+}
+.titulo-principal,
+.apresentacao .subtitulo,
+.subtitulo-cartao,
+.etapa h3,
+.pagina-resultado .subtitulo,
+#titulo-resultado,
+.carreira__titulo,
+.carreira h4,
+.modal__conteudo h2 {
+  color: #ffffff;
+}
+.apresentacao__texto,
+.dica,
+.carreira__resumo,
+.carreira__legenda {
+  color: #c0b6b6;
+}
+
+/* Passos */
+.passo {
+  color: #f7f3f3;
+  background: #171313;
+  border: 1px solid #493b3b;
+  box-shadow: var(--sombra-p);
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.passo::before,
+.roteiro li::before {
+  background: #850f0f;
+  color: #ffffff;
+}
+.passo:hover {
+  transform: translateY(-3px);
+  border-color: #e00000;
+  box-shadow: 0 8px 22px rgb(0 0 0 / .4), 0 0 14px rgb(224 0 0 / .14);
+}
+
+/* Caixa do questionário */
+.cartao {
+  background: linear-gradient(155deg, #1b1617, #100d0e);
+  border: 1px solid #6b252b;
+  border-radius: var(--raio-g);
+  box-shadow: 0 12px 34px rgb(0 0 0 / .55), 0 0 20px rgb(224 0 0 / .12);
+  transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease;
+}
+.cartao:hover {
+  border-color: #a52a32;
+  box-shadow: 0 16px 40px rgb(0 0 0 / .58), 0 0 24px rgb(224 0 0 / .16);
+}
+.subtitulo-cartao { border-bottom-color: #493b3b; }
+
+/* Campos */
+.campo label { color: #f4eeee; }
+.campo input,
+.campo textarea {
+  background: #0d0b0c;
+  border: 1px solid #594747;
+  color: #ffffff;
+}
+.campo input::placeholder,
+.campo textarea::placeholder { color: #9b8d8d; }
+.campo input:focus,
+.campo textarea:focus {
+  border-color: #e00000;
+  background: #120e0f;
+  box-shadow: 0 0 0 3px rgb(224 0 0 / .18), 0 0 14px rgb(224 0 0 / .10);
+}
+.campo input:user-invalid,
+.campo textarea:user-invalid { border-color: #ff5555; }
+.progresso {
+  background: #351719;
+  color: #ff7777;
+}
+
+/* Mensagens */
+.mensagem {
+  background: #251416;
+  border-left-color: #e00000;
+  color: #f7eeee;
+}
+
+/* Botões */
+.botao {
+  background: linear-gradient(135deg, #e00000, #850f0f);
+  color: #ffffff;
+  box-shadow: 0 7px 20px rgb(224 0 0 / .22);
+  transition: background .25s ease, border-color .25s ease, color .25s ease,
+              transform .25s ease, box-shadow .25s ease;
+}
+.botao:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff1717, #a51019);
+  box-shadow: 0 9px 24px rgb(224 0 0 / .30);
+  transform: translateY(-2px);
+}
+.botao--secundario {
+  background: #171313;
+  border-color: #594747;
+  color: #ffffff;
+}
+.botao--secundario:hover:not(:disabled) {
+  background: #2a1719;
+  border-color: #e00000;
+  color: #ffffff;
+}
+
+/* Resultados */
+.sintese {
+  background: linear-gradient(135deg, #211719, #120f10);
+  border: 1px solid #594044;
+  border-left: 4px solid #e00000;
+  color: #f5eeee;
+  box-shadow: var(--sombra-p);
+}
+.carreira {
+  background: #171313;
+  border: 1px solid #493b3b;
+  border-radius: var(--raio-g);
+  box-shadow: var(--sombra-p);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.carreira:hover {
+  transform: translateY(-4px);
+  border-color: #8b252d;
+  box-shadow: 0 12px 28px rgb(0 0 0 / .48), 0 0 16px rgb(224 0 0 / .12);
+}
+.lista-carreiras > .carreira:first-child {
+  border: 1px solid #e00000;
+  background: linear-gradient(180deg, #2b1518 0, #171313 9rem);
+}
+.carreira__selo {
+  background: linear-gradient(135deg, #e00000, #850f0f);
+  color: #ffffff;
+}
+.carreira__nota,
+.chips li {
+  background: #291719;
+  color: #ff8585;
+  border: 1px solid #693037;
+}
+.barra { background: #342528; }
+.barra__nivel { background: linear-gradient(90deg, #850f0f, #ff2525); }
+.carreira h4 { border-top-color: #493b3b; }
+.roteiro li:not(:last-child)::after { background: #633039; }
+
+/* Modal */
+.modal {
+  background: #171313;
+  color: #f7eeee;
+  border: 1px solid #6b252b;
+  box-shadow: 0 24px 70px rgb(0 0 0 / .65);
+}
+.modal::backdrop { background: rgb(0 0 0 / .76); backdrop-filter: blur(5px); }
+.modal__conteudo { border-top: 4px solid #e00000; }
+
+/* Rodapé */
+.rodape {
+  background: #0b0909;
+  border-top: 1px solid #493b3b;
+  color: #b9adad;
+}
+.rodape a { color: #ff5555; }
+
+/* Animações suaves de entrada */
+@keyframes aparecerSuave {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes brilhoVermelho {
+  0%, 100% { box-shadow: 0 12px 34px rgb(0 0 0 / .55), 0 0 18px rgb(224 0 0 / .08); }
+  50% { box-shadow: 0 12px 34px rgb(0 0 0 / .55), 0 0 25px rgb(224 0 0 / .16); }
+}
+.topo,
+.apresentacao,
+.cartao,
+.rodape {
+  animation: aparecerSuave .7s ease both;
+}
+.cartao { animation: aparecerSuave .8s ease both, brilhoVermelho 5s ease-in-out 1s infinite; }
+.passo { animation: aparecerSuave .6s ease both; }
+.passo:nth-child(2) { animation-delay: .08s; }
+.passo:nth-child(3) { animation-delay: .16s; }
+.etapa { animation: aparecerSuave .35s ease both; }
+.mensagem { animation: aparecerSuave .25s ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
+/* =====================================================
+   CABEÇALHO ORBYT
+   Logo: logo_orbyt_cabecalho.png (PNG transparente, 1231x260)
+   ===================================================== */
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  background: rgb(5 5 5 / .94);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgb(224 0 0 / .4);
+  box-shadow: 0 6px 24px rgb(0 0 0 / .5);
+}
+
+/* linha de brilho vermelho na base do cabeçalho */
+.topo::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #e00000 25%, #e00000 75%, transparent);
+  opacity: .55;
+  pointer-events: none;
+}
+
+.topo__conteudo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 80px;
+  padding-block: 12px;
+}
+
+.topo .marca {
+  display: inline-flex;
+  flex: 0 1 auto;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  text-decoration: none;
+  transition: filter .25s ease, transform .25s ease;
+}
+
+.topo .marca img {
+  display: block;
+  height: 56px;              /* a largura acompanha a proporção da logo */
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  user-select: none;
+}
+
+.topo .marca:hover {
+  transform: translateY(-1px);
+  filter: drop-shadow(0 0 10px rgb(224 0 0 / .45));
+}
+
+.topo .marca:focus-visible {
+  outline: 3px solid #ff2525;
+  outline-offset: 6px;
+  border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+  .topo__conteudo { min-height: 68px; padding-block: 10px; }
+  .topo .marca img { height: 44px; }
+}
+
+@media (max-width: 360px) {
+  .topo .marca img { height: 38px; }
 }
