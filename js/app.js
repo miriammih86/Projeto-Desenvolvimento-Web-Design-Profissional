@@ -42,6 +42,7 @@ function validarFormulario() {
   const nome = campoNome.value.trim();
   if (nome.length < 2) campoNome.setCustomValidity("O nome deve ter pelo menos 2 caracteres.");
   else if (nome.length > 60) campoNome.setCustomValidity("O nome deve ter no máximo 60 caracteres.");
+  else if (!/^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ .\x27-]{1,59}$/.test(nome)) campoNome.setCustomValidity("Digite um nome válido, usando letras e espaços.");
   if (!campoNome.checkValidity()) {
     campoNome.reportValidity();
     campoNome.focus();
