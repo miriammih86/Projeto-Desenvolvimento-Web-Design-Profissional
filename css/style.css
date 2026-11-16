@@ -817,3 +817,12 @@ body {
 @media (max-width: 360px) {
   .topo .marca img { height: 38px; }
 }
+
+/* Formulário empilhado e botão de envio em largura total */
+.formulario { display: flex; flex-direction: column; align-items: stretch; gap: 1.25rem; }
+.formulario > .campo { width: 100%; }
+.formulario > #btn-enviar { width: 100%; }
+@media (max-width: 480px) {
+  .pagina-inicial { grid-template-columns: minmax(0, 1fr); }
+  .formulario > #btn-enviar { width: 100%; }
+}
