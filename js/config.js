@@ -1,9 +1,9 @@
 /**
  * Configuração do Career Dreamer.
- * O README define que API_URL deve conter o endpoint completo.
+ * Preencha API_URL somente quando o backend fornecer o endpoint completo.
  */
 const CONFIG = Object.freeze({
-  API_URL: "https://google-career-dreamer-api.onrender.com/api/career-match",
+  API_URL: "",
   TEMPO_LIMITE_MS: 60000,
   CHAVE_RESULTADO: "careerDreamer:resultado"
 });
