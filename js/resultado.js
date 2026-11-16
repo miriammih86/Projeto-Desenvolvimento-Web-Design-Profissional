@@ -24,6 +24,7 @@ function renderizarCarreira(carreira, indice) {
   const selo = copia.querySelector(".carreira__selo");
   const titulo = copia.querySelector(".carreira__titulo");
   const percentual = copia.querySelector(".carreira__percentual");
+  const barra = copia.querySelector(".barra");
   const nivel = copia.querySelector(".barra__nivel");
   const resumo = copia.querySelector(".carreira__resumo");
   const chips = copia.querySelector(".chips");
