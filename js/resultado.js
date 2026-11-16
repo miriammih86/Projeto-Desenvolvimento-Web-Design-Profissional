@@ -36,10 +36,7 @@ function renderizarCarreira(carreira, indice) {
   const notaSegura = Number.isFinite(nota) ? Math.max(0, Math.min(100, nota)) : 0;
   percentual.textContent = `${notaSegura}%`;
   nivel.style.width = `${notaSegura}%`;
-  nivel.setAttribute("role", "progressbar");
-  nivel.setAttribute("aria-valuenow", String(notaSegura));
-  nivel.setAttribute("aria-valuemin", "0");
-  nivel.setAttribute("aria-valuemax", "100");
+  barra.setAttribute("aria-valuenow", String(notaSegura));
   resumo.textContent = carreira.summary || "Resumo não informado.";
 
   if (indice === 0) {
