@@ -82,7 +82,7 @@
       <form id="form-perfil" class="formulario" novalidate>
         <div class="campo">
           <label for="nome">Nome</label>
-          <input type="text" id="nome" name="nome" inputmode="text" minlength="2" maxlength="60" autocomplete="name" placeholder="Ex.: Aline Santos" required>
+          <input type="text" id="nome" name="nome" inputmode="text" minlength="2" maxlength="60" pattern="[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ .\x27-]{1,59}" title="Digite um nome de 2 a 60 letras." autocomplete="name" placeholder="Ex.: Aline Santos" required>
         </div>
         <div class="campo">
           <label for="hobbies">Hobbies</label>
