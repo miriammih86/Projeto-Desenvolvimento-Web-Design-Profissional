@@ -1,228 +1,222 @@
+
+
 /**
- * Career Dreamer — formulário, validação e análise de perfil.
- * Usa a API quando configurada; caso contrário, oferece recomendações locais.
+ * Career Dreamer — formulário, validação e integração com a API.
  */
+
 const formulario = document.querySelector("#form-perfil");
 const botaoIniciar = document.querySelector("#btn-iniciar");
 const cartaoFormulario = document.querySelector("#cartao-formulario");
-const botaoEnviar = document.querySelector("#btn-enviar");
+const etapas = [...document.querySelectorAll(".etapa")];
+const mensagem = document.querySelector("#mensagem");
+
 const campoNome = document.querySelector("#nome");
 const campoHobbies = document.querySelector("#hobbies");
 const campoInteresses = document.querySelector("#interesses");
+
 const modal = document.querySelector("#modal-aviso");
 const modalTexto = document.querySelector("#modal-texto");
 const botaoFecharModal = document.querySelector("#btn-fechar-modal");
+const botaoEnviar = formulario.querySelector('button[type="submit"]');
 
+let etapaAtual = 0;
 let enviando = false;
 
-function mostrarModal(texto) {
-  if (!modal || !modalTexto) {
-    window.alert(texto);
-    return;
-  }
-  modalTexto.textContent = texto;
-  if (typeof modal.showModal === "function") modal.showModal();
-  else window.alert(texto);
+function mostrarMensagem(texto) {
+  mensagem.textContent = texto;
+  mensagem.hidden = false;
 }
+
+function limparMensagem() {
+  mensagem.textContent = "";
+  mensagem.hidden = true;
+}
+
+function abrirModal(texto) {
+  modalTexto.textContent = texto;
+  if (typeof modal.showModal === "function") {
+    modal.showModal();
+  } else {
+    alert(`Tente mais tarde\n\n${texto}`);
+  }
+}
+
+botaoFecharModal.addEventListener("click", () => modal.close());
+
+function mostrarEtapa(indice) {
+  if (indice < 0 || indice >= etapas.length) return;
+
+  etapas.forEach((etapa, i) => {
+    etapa.hidden = i !== indice;
+  });
+
+  etapaAtual = indice;
+  limparMensagem();
+
+  const primeiroCampo = etapas[indice].querySelector("input, textarea");
+  primeiroCampo?.focus({ preventScroll: true });
+}
+
+botaoIniciar.addEventListener("click", () => {
+  cartaoFormulario.hidden = false;
+  mostrarEtapa(0);
+  cartaoFormulario.scrollIntoView({ behavior: "smooth", block: "start" });
+});
 
 function separarItens(texto) {
-  return texto.split(",").map((item) => item.trim()).filter(Boolean);
+  return texto
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
 }
 
-function validarLista(campo, descricao) {
+function validarCampo(campo, tipo) {
   campo.setCustomValidity("");
-  if (!campo.value.trim() || separarItens(campo.value).length === 0) {
-    campo.setCustomValidity(`Informe pelo menos um(a) ${descricao}, separado(a) por vírgula.`);
+
+  if (!campo.value.trim()) {
+    campo.setCustomValidity("Preencha este campo para continuar.");
+  } else if (tipo === "nome" && campo.value.trim().length < 2) {
+    campo.setCustomValidity("O nome deve ter pelo menos 2 caracteres.");
+  } else if (tipo === "nome" && campo.value.trim().length > 60) {
+    campo.setCustomValidity("O nome deve ter no máximo 60 caracteres.");
+  } else if (tipo === "lista" && separarItens(campo.value).length === 0) {
+    campo.setCustomValidity("Informe pelo menos um item separado por vírgula.");
+  }
+
+  if (!campo.checkValidity()) {
     campo.reportValidity();
     campo.focus();
     return false;
   }
+
   return true;
 }
 
-function validarFormulario() {
-  campoNome.setCustomValidity("");
-  const nome = campoNome.value.trim();
-  if (nome.length < 2) campoNome.setCustomValidity("O nome deve ter pelo menos 2 caracteres.");
-  else if (nome.length > 60) campoNome.setCustomValidity("O nome deve ter no máximo 60 caracteres.");
-  else if (!/^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ .\x27-]{1,59}$/.test(nome)) {
-    campoNome.setCustomValidity("Digite um nome válido, usando letras e espaços.");
-  }
-  if (!campoNome.checkValidity()) {
-    campoNome.reportValidity();
-    campoNome.focus();
-    return false;
-  }
-  return validarLista(campoHobbies, "hobby") && validarLista(campoInteresses, "interesse");
+function etapaValida() {
+  const campo = etapas[etapaAtual].querySelector("input, textarea");
+  if (!campo) return false;
+
+  const tipo = campo.id === "nome" ? "nome" : "lista";
+  return validarCampo(campo, tipo);
 }
 
-[campoNome, campoHobbies, campoInteresses].forEach((campo) => {
-  campo.addEventListener("input", () => campo.setCustomValidity(""));
+// AVANÇAR PELO BOTÃO PRÓXIMO
+document.querySelectorAll("[data-proximo]").forEach((botao) => {
+  botao.addEventListener("click", () => {
+    if (etapaValida()) {
+      mostrarEtapa(etapaAtual + 1);
+    }
+  });
 });
 
-if (botaoIniciar && cartaoFormulario) {
-  botaoIniciar.addEventListener("click", () => {
-    cartaoFormulario.hidden = false;
-    cartaoFormulario.scrollIntoView({ behavior: "smooth", block: "start" });
-    campoNome.focus({ preventScroll: true });
+// VOLTAR PELO BOTÃO
+document.querySelectorAll("[data-voltar]").forEach((botao) => {
+  botao.addEventListener("click", () => {
+    mostrarEtapa(etapaAtual - 1);
   });
-}
+});
 
-if (botaoFecharModal && modal) {
-  botaoFecharModal.addEventListener("click", () => modal.close());
-}
+// NOVA FUNÇÃO: AVANÇAR COM ENTER
+document.querySelectorAll(".etapa input, .etapa textarea").forEach((campo) => {
+  campo.addEventListener("keydown", (evento) => {
+    if (evento.key === "Enter") {
+      evento.preventDefault();
 
-const catalogoCarreiras = [
-  {
-    id: "desenvolvimento-web",
-    title: "Desenvolvedor(a) Web",
-    keywords: ["programacao", "codigo", "site", "sites", "tecnologia", "logica", "computador", "html", "javascript"],
-    summary: "Cria sites e sistemas para resolver problemas e oferecer experiências digitais.",
-    key_skills: ["HTML e CSS", "JavaScript", "Lógica de programação", "Resolução de problemas"],
-    learning_path: ["Aprender HTML e CSS", "Estudar lógica e JavaScript", "Criar projetos próprios", "Conhecer APIs e frameworks"]
-  },
-  {
-    id: "ui-ux",
-    title: "Designer UI/UX",
-    keywords: ["design", "desenho", "desenhar", "arte", "criatividade", "cores", "interface", "experiencia", "visual", "figma"],
-    summary: "Planeja interfaces e experiências digitais fáceis de entender e agradáveis de usar.",
-    key_skills: ["Criatividade", "Figma", "Pesquisa com usuários", "Acessibilidade"],
-    learning_path: ["Estudar princípios de design", "Aprender Figma", "Criar protótipos", "Testar interfaces com usuários"]
-  },
-  {
-    id: "games",
-    title: "Desenvolvedor(a) de Jogos Digitais",
-    keywords: ["jogos", "game", "games", "videogame", "jogar", "historia", "desenho", "programacao", "criatividade"],
-    summary: "Desenvolve jogos, mecânicas, personagens e experiências interativas.",
-    key_skills: ["Lógica de programação", "Game design", "Criatividade", "Unity ou Godot"],
-    learning_path: ["Estudar lógica de programação", "Conhecer Unity ou Godot", "Criar um jogo simples", "Desenvolver um projeto completo"]
-  },
-  {
-    id: "dados-ia",
-    title: "Analista de Dados e Inteligência Artificial",
-    keywords: ["dados", "matematica", "numeros", "pesquisa", "analise", "ia", "inteligencia artificial", "logica", "estatistica"],
-    summary: "Analisa informações e utiliza dados para encontrar padrões e apoiar decisões.",
-    key_skills: ["Raciocínio lógico", "Excel", "SQL", "Python"],
-    learning_path: ["Aprender planilhas", "Estudar estatística básica", "Aprender SQL", "Explorar Python e visualização de dados"]
-  },
-  {
-    id: "seguranca",
-    title: "Analista de Segurança da Informação",
-    keywords: ["seguranca", "investigacao", "computador", "tecnologia", "redes", "logica", "problemas", "privacidade"],
-    summary: "Ajuda a proteger sistemas, redes e informações contra riscos digitais.",
-    key_skills: ["Redes de computadores", "Sistemas operacionais", "Atenção a detalhes", "Boas práticas de segurança"],
-    learning_path: ["Conhecer hardware e sistemas", "Estudar redes", "Aprender fundamentos de segurança", "Praticar em ambientes educacionais autorizados"]
-  },
-  {
-    id: "produto",
-    title: "Gerente de Projetos e Produtos Digitais",
-    keywords: ["organizar", "organizacao", "planejar", "liderar", "equipe", "comunicacao", "resolver", "projetos"],
-    summary: "Organiza projetos e conecta as necessidades das pessoas às soluções desenvolvidas por equipes.",
-    key_skills: ["Comunicação", "Planejamento", "Trabalho em equipe", "Metodologias ágeis"],
-    learning_path: ["Estudar fundamentos de projetos", "Conhecer Scrum e Kanban", "Praticar planejamento", "Participar de projetos em equipe"]
-  },
-  {
-    id: "marketing",
-    title: "Profissional de Marketing Digital",
-    keywords: ["redes sociais", "comunicacao", "escrever", "fotografia", "video", "criatividade", "publicidade", "conteudo"],
-    summary: "Planeja conteúdos e estratégias digitais para comunicar ideias e conectar marcas a pessoas.",
-    key_skills: ["Comunicação", "Produção de conteúdo", "Análise de métricas", "Criatividade"],
-    learning_path: ["Estudar comunicação digital", "Aprender criação de conteúdo", "Conhecer métricas", "Montar um portfólio"]
-  },
-  {
-    id: "suporte",
-    title: "Analista de Suporte e Infraestrutura",
-    keywords: ["ajudar", "consertar", "montar", "computador", "hardware", "tecnologia", "resolver", "redes"],
-    summary: "Ajuda pessoas a utilizar a tecnologia e mantém computadores, redes e sistemas funcionando.",
-    key_skills: ["Hardware", "Redes", "Sistemas operacionais", "Atendimento"],
-    learning_path: ["Conhecer componentes de computadores", "Estudar sistemas operacionais", "Aprender redes básicas", "Praticar diagnóstico de problemas"]
-  }
-];
+      const etapa = campo.closest(".etapa");
+      const botaoProximo = etapa.querySelector("[data-proximo]");
 
-function normalizar(texto) {
-  return texto.toLocaleLowerCase("pt-BR").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
+      if (botaoProximo && etapaValida()) {
+        botaoProximo.click();
+      }
+    }
+  });
+});
 
-function gerarResultadoLocal(perfil) {
-  const textoPerfil = normalizar([...perfil.hobbies, ...perfil.interests].join(" "));
-  const carreiras = catalogoCarreiras.map((carreira) => {
-    const pontos = carreira.keywords.reduce((total, palavra) => {
-      return total + (textoPerfil.includes(normalizar(palavra)) ? 1 : 0);
-    }, 0);
-    return {
-      ...carreira,
-      match_score: Math.min(98, 55 + pontos * 9)
-    };
-  }).sort((a, b) => b.match_score - a.match_score).slice(0, 4);
-
-  return {
-    user_name: perfil.name,
-    career_identity_statement:
-      `Olá, ${perfil.name}! Considerando os hobbies informados (${perfil.hobbies.join(", ")}) e seus interesses (${perfil.interests.join(", ")}), estas são algumas áreas que podem combinar com seu perfil. Esta é uma análise inicial feita pelo próprio site, sem inteligência artificial ou consulta a um serviço externo.`,
-    recommended_careers: carreiras
-  };
+function respostaValida(dados) {
+  return Boolean(
+    dados &&
+    typeof dados.user_name === "string" &&
+    typeof dados.career_identity_statement === "string" &&
+    Array.isArray(dados.recommended_careers) &&
+    dados.recommended_careers.length > 0
+  );
 }
 
 formulario.addEventListener("submit", async (evento) => {
   evento.preventDefault();
-  if (enviando || !validarFormulario()) return;
+  if (enviando || !etapaValida()) return;
 
-  const perfil = {
-    name: campoNome.value.trim(),
-    hobbies: separarItens(campoHobbies.value),
-    interests: separarItens(campoInteresses.value)
-  };
+  if (typeof CONFIG === "undefined" || !CONFIG.API_URL?.trim()) {
+    abrirModal("O serviço de análise ainda não foi configurado. Tente novamente mais tarde.");
+    return;
+  }
+
+  const nome = campoNome.value.trim();
+  const hobbies = separarItens(campoHobbies.value);
+  const interesses = separarItens(campoInteresses.value);
+
+  if (hobbies.length === 0) {
+    mostrarEtapa(1);
+    validarCampo(campoHobbies, "lista");
+    return;
+  }
+
+  if (interesses.length === 0) {
+    validarCampo(campoInteresses, "lista");
+    return;
+  }
+
+  const perfil = { name: nome, hobbies, interests: interesses };
+  const textoOriginal = botaoEnviar.textContent;
 
   enviando = true;
   botaoEnviar.disabled = true;
   botaoEnviar.textContent = "Analisando seu perfil...";
+  limparMensagem();
+
+  const controlador = new AbortController();
+  const tempoLimite = setTimeout(
+    () => controlador.abort(),
+    Number(CONFIG.TEMPO_LIMITE_MS) || 60000
+  );
 
   try {
-    let dados;
-    const apiConfigurada = typeof CONFIG !== "undefined" && CONFIG.API_URL?.trim();
+    const resposta = await fetch(CONFIG.API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify(perfil),
+      signal: controlador.signal
+    });
 
-    if (apiConfigurada) {
-      const controlador = new AbortController();
-      const tempoLimite = window.setTimeout(
-        () => controlador.abort(),
-        Number(CONFIG.TEMPO_LIMITE_MS) || 60000
-      );
-      try {
-        const resposta = await fetch(CONFIG.API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify(perfil),
-          signal: controlador.signal
-        });
-        if (!resposta.ok) throw new Error(`A API respondeu com o status ${resposta.status}.`);
-        dados = await resposta.json();
-      } finally {
-        window.clearTimeout(tempoLimite);
-      }
-      if (!dados || typeof dados.user_name !== "string" ||
-          typeof dados.career_identity_statement !== "string" ||
-          !Array.isArray(dados.recommended_careers) || dados.recommended_careers.length === 0) {
-        throw new Error("A resposta da API não segue o formato esperado.");
-      }
-    } else {
-      dados = gerarResultadoLocal(perfil);
+    if (!resposta.ok) {
+      throw new Error(`A API respondeu com o status ${resposta.status}.`);
     }
 
-    const chaveResultado = typeof CONFIG !== "undefined"
-      ? CONFIG.CHAVE_RESULTADO
-      : "careerDreamer:resultado";
-    sessionStorage.setItem(chaveResultado, JSON.stringify(dados));
+    const dados = await resposta.json();
+
+    if (!respostaValida(dados)) {
+      throw new Error("A API respondeu, mas os dados recebidos estão incompletos.");
+    }
+
+    sessionStorage.setItem(CONFIG.CHAVE_RESULTADO, JSON.stringify(dados));
     window.location.href = "resultado.html";
+
   } catch (erro) {
-    console.error("Erro ao analisar perfil:", erro);
-    mostrarModal(
-      erro.name === "AbortError"
-        ? "A análise demorou mais que o esperado. Seus dados continuam preenchidos; tente novamente."
-        : "Não foi possível concluir a análise. Verifique sua conexão ou tente novamente."
-    );
+    console.error("Erro ao enviar perfil:", erro);
+
+    const texto = erro.name === "AbortError"
+      ? "A análise demorou mais que o esperado. Seus dados continuam preenchidos; tente novamente."
+      : "Não foi possível analisar seu perfil agora. Verifique sua conexão e tente novamente.";
+
+    abrirModal(texto);
+
   } finally {
+    clearTimeout(tempoLimite);
     enviando = false;
     botaoEnviar.disabled = false;
-    botaoEnviar.textContent = "Descobrir minha carreira";
+    botaoEnviar.textContent = textoOriginal;
   }
 });
